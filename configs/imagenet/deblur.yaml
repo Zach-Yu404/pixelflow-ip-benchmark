@@ -1,0 +1,45 @@
+# Gaussian deblur k=61 sigma=3 (operator IDENTICAL to DAPS, |Δ|=0.0)
+# AUTO-GENERATED from the canonical DAPS-aligned config
+#   configs_best_out/gaussian_blur_best.json
+# Reproduces: results/previous_results/ours_rerun_best/group100_gaussian_blur_best/
+# Operator alignment + sampler knobs are FROZEN here; edit deliberately.
+# Paths are NOT in this file — they come from configs/paths.local.yaml.
+# ---------------------------------------------------------------------------
+task: gaussian_blur
+validation_tag: gaussian_blur_best
+group_id: 100
+sigma_n: 0.05
+resolution: 256
+batch_size: 8
+operator:
+  kernel_size: 61
+  kernel_std: 3.0000000000000004
+kw:
+  num_langevin: 10.0
+  ode_steps_per_stage: 10.0
+  h_x: 0.7
+  h_epsilon: 0.001
+  lambda_reg: 350.0
+  lambda_prox: 350.0
+  noise_scale: 1.0
+  sigma_ref_sq: 0.0001
+  shift: 1.0
+  guidance_scale: 2.0
+  warm_restart: true
+  g_bypass_stage3: true
+  x1_init_mode: model
+  lambda_x: 0.01
+  rho_s: 1.0000000000000002
+  rho_e: 1.0000000000000002
+  cg_tol: 1.0e-05
+  cg_max_iter: 50
+  final_denoise: true
+  terminal_replace_weight: 0.0
+  skip_x_noise_last_k: 0
+  scheduled_h_x: true
+  h_x_lr_min_ratio: 0.01
+  h_x_schedule_p: 1.0
+  scheduled_lambda_reg: true
+  lambda_reg_max: 350.0
+  lambda_reg_min: 300.0
+  lambda_reg_schedule_p: 1.0

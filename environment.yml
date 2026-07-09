@@ -1,0 +1,31 @@
+# Mirrors the verified `pixelflow` conda env. On this machine it lives at
+# ~/anaconda3/envs/pixelflow (configs/paths.local.yaml: python_bin).
+# For exact reproduction on THIS machine, just use that interpreter directly.
+name: pixelflow
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pip
+  - pip:
+      - torch==2.6.0
+      - torchvision==0.21.0
+      - numpy==2.4.3
+      - pillow==12.1.1
+      - omegaconf==2.3.0
+      - PyYAML==6.0.3
+      - piq==0.8.0
+      - lpips==0.1.4
+      - scikit-image==0.26.0
+      - scipy==1.17.1
+      - matplotlib==3.10.8
+      - einops==0.8.2
+      - tqdm==4.67.3
+      # required by the reused original sampler/pixelflow code:
+      - diffusers==0.32.2
+      - transformers==4.48.0
+      - torchdiffeq==0.2.4
+      - pandas
+      - pyarrow

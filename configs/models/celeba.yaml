@@ -1,0 +1,14 @@
+name: celeba256_pixelflow
+description: >
+  PixelFlow CelebA prior (exp_155024), resolution 256, num_classes 2, patch_size 2.
+  Reproduced via the self-contained celeba_results/code/evaluate.py (precomputed .pt groups).
+model_dir: checkpoints/celeba             # -> exp_155024 (config.yaml + ckpt)
+checkpoint: checkpoints/celeba/model_epoch0020.pt   # ~7.3 GB
+config_yaml: checkpoints/celeba/config.yaml         # depth 24, 16 heads, num_classes 2
+resolution: 256
+load: {weights_only: false, state_dict_key: auto, strict: true}
+notes: >
+  SR uses scale_factor x2 (CelebA convention), not x4. Groups are group_{0..4}.pt tensors
+  (100 imgs each) at celeba_groups_dir; labels are all class 0. Metrics complete (500/config)
+  in results/previous_results/celeba/metrics/.
+guidance: {type: classifier_free, default_scale: 2.0}

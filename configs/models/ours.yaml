@@ -1,0 +1,29 @@
+# Our method's model — PixelFlow flow-based posterior sampler (class-conditional).
+# This file describes the checkpoint + how it is loaded. The actual sampler is the
+# verified run_posterior_sampling in the original IP_package (reused, not reimplemented).
+
+name: ours_pixelflow_c2img
+description: >
+  Class-conditional PixelFlow model (ImageNet-256, 1000 classes) used as the prior
+  for multi-stage Langevin posterior sampling on inverse problems. Class-conditional
+  + classifier-free guidance (guidance_scale=2.0 in the task kw). NOTE: DAPS uses an
+  UNCONDITIONAL model — keep the prior mismatch in mind when comparing methods.
+
+# Checkpoint (symlinked into checkpoints/ours/; resolves to pretrained_models/c2img).
+model_dir: checkpoints/ours        # contains config.yaml + model.pt
+config_yaml: checkpoints/ours/config.yaml   # target: pixelflow.model.PixelFlowModel, num_classes: 1000
+checkpoint: checkpoints/ours/model.pt       # ~2.7 GB, FLAT state_dict (no ema/model wrapper)
+
+# How runner.py loads it (documented; do not change without re-validating):
+#   ckpt = torch.load(model.pt, weights_only=False)
+#   state_dict = ckpt["ema"] if "ema" in ckpt else ckpt["model"] if "model" in ckpt else ckpt
+#   -> our model.pt is a flat dict (top keys e.g. patch_embed.proj.weight) -> else-branch.
+load:
+  weights_only: false
+  state_dict_key: auto       # auto = ema|model|flat; ours resolves to flat
+  strict: true
+
+guidance:
+  type: classifier_free
+  default_scale: 2.0         # the per-task kw.guidance_scale overrides this
+  class_labels_source: groups/group_<id>/meta.json  # verified-correct sorted-synset indices

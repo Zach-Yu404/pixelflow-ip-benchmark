@@ -1,0 +1,34 @@
+# AFHQ-512 superresolution / LPIPS_king  (PixelFlow cat/dog/wild prior, res 512)
+# AUTO-GENERATED from tasks_afhq/superresolution/configs/LPIPS_king.json (paths stripped).
+# Reproduces: results/previous_results/afhq/demo_runs_afhq/superresolution/LPIPS_king/
+# Model/data paths come from configs/paths.local.yaml (afhq_*). Pipeline = demo_runner sampler.
+# ---------------------------------------------------------------------------
+task: superresolution
+validation_tag: LPIPS_king
+operator:
+  scale_factor: 4
+kw:
+  num_langevin: 10
+  ode_steps_per_stage: 10
+  shift: 1.0
+  guidance_scale: 2.0
+  warm_restart: true
+  g_bypass_stage3: true
+  x1_init_mode: model
+  lambda_x: 0.01
+  rho_s: 1.0
+  rho_e: 1.0
+  cg_tol: 1.0e-05
+  cg_max_iter: 50
+  final_denoise: false
+  terminal_replace_weight: 0.0
+  noise_scale: 1.0
+  lambda_reg: 350.0
+  lambda_prox: 350.0
+  h_epsilon: 0.001
+  h_x: 0.2
+  sigma_ref_sq: 1.0e-05
+resolution: 512
+sigma_n: 0.05
+batch_size: 1
+group_id: 0

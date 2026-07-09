@@ -1,0 +1,110 @@
+# =============================================================================
+# paths.local.yaml — SINGLE SOURCE OF TRUTH for all absolute / machine-specific
+# paths used by this local reproduction project.
+#
+# WHY THIS FILE EXISTS
+#   The benchmark is reproduced by *reusing* the already-validated code that
+#   lives in the original IP_package (the sampler, operators, metrics, runner).
+#   To keep the local project clean for a future official release, every
+#   absolute path is centralized HERE — NOT scattered through the code. The
+#   benchmark/ scripts read this file, add the original code dirs to sys.path,
+#   and call the verified functions. Swap this one file to port to a new box.
+#
+# MIGRATION NOTE (2026-07): moved from the old box to the CBIG cluster.
+#   /home/nvidia/Zach/MSFlow  -> /sfs/ceph/standard/CBIG-Standard-ECE/Zach/MSFlow
+#   /data/Zach_dataset        -> /sfs/ceph/standard/CBIG-Standard-ECE/Zach_dataset/Zach_dataset
+#   c2img weights now live in PixelFlow/pretrained_models/ (IP_package copy not migrated).
+#   The MRI prior (exp0003/model_epoch40.pt) was RESTORED — see checkpoints/mri/.
+#
+# DO NOT hard-code any of these paths inside src/ or benchmark/*.py.
+# =============================================================================
+
+# --- this project ------------------------------------------------------------
+project_root: /sfs/ceph/standard/CBIG-Standard-ECE/Zach/MSFlow/github_project_local
+
+# --- original code we REUSE (read-only; never modified by this project) ------
+# runner.py / operators.py / metrics.py / seeding.py live in original_rerun_imagenet;
+# the sampler (ms_posterior_sampling_*) and pixelflow package live in original_ip_package.
+original_ip_package:      /sfs/ceph/standard/CBIG-Standard-ECE/Zach/MSFlow/PixelFlow/IP_package
+original_rerun_imagenet:  /sfs/ceph/standard/CBIG-Standard-ECE/Zach/MSFlow/PixelFlow/IP_package/rerun_imageNet
+original_baselines:       /sfs/ceph/standard/CBIG-Standard-ECE/Zach/MSFlow/PixelFlow/IP_package/baselines
+# DAPS forward operators (motionblur.Kernel) — operator alignment references this.
+daps_repo:                /sfs/ceph/standard/CBIG-Standard-ECE/Zach/MSFlow/PixelFlow/IP_package/baselines/DAPS
+
+# --- checkpoint (symlinked into checkpoints/ours/) ---------------------------
+checkpoint_root:          /sfs/ceph/standard/CBIG-Standard-ECE/Zach/MSFlow/github_project_local/checkpoints/ours
+# model_dir is what runner.py loads (config.yaml + model.pt). Point at our local
+# symlink dir so the project is self-describing; resolves to
+# PixelFlow/pretrained_models/c2img (the IP_package copy was not migrated).
+model_dir:                /sfs/ceph/standard/CBIG-Standard-ECE/Zach/MSFlow/github_project_local/checkpoints/ours
+
+# --- data --------------------------------------------------------------------
+# Prebuilt evaluation groups (center_crop_arr GTs + inpainting masks). group_100
+# is DAPS's exact 100 ImageNet-val images (ILSVRC2012_val_00049000..49099).
+groups_dir:               /sfs/ceph/standard/CBIG-Standard-ECE/Zach/MSFlow/PixelFlow/IP_package/rerun_imageNet/groups
+daps_group_id:            100
+# Raw ImageNet-val (only needed to REBUILD groups from scratch; not for repro).
+imagenet_val_dir:         /sfs/ceph/standard/CBIG-Standard-ECE/Zach_dataset/Zach_dataset/imageNet256/ILSVRC/Data/CLS-LOC/val
+imagenet_val_solution:    /sfs/ceph/standard/CBIG-Standard-ECE/Zach_dataset/Zach_dataset/imageNet256/LOC_val_solution.csv
+imagenet_synset_mapping:  /sfs/ceph/standard/CBIG-Standard-ECE/Zach_dataset/Zach_dataset/imageNet256/LOC_synset_mapping.txt
+
+# --- previous (reference) results we reproduce against -----------------------
+previous_results_root:    /sfs/ceph/standard/CBIG-Standard-ECE/Zach/MSFlow/github_project_local/results/previous_results
+previous_ours_rerun:      /sfs/ceph/standard/CBIG-Standard-ECE/Zach/MSFlow/github_project_local/results/previous_results/ours_rerun_best
+previous_ours_demorunner: /sfs/ceph/standard/CBIG-Standard-ECE/Zach/MSFlow/github_project_local/results/previous_results/ours_demorunner
+baselines_results_root:   /sfs/ceph/standard/CBIG-Standard-ECE/Zach/MSFlow/github_project_local/results/baselines
+
+# --- output roots (created by this project; safe to delete & regenerate) -----
+output_root:              /sfs/ceph/standard/CBIG-Standard-ECE/Zach/MSFlow/github_project_local/results/reproduced_results
+metrics_root:             /sfs/ceph/standard/CBIG-Standard-ECE/Zach/MSFlow/github_project_local/results/metrics
+figures_root:             /sfs/ceph/standard/CBIG-Standard-ECE/Zach/MSFlow/github_project_local/results/figures
+
+# =============================================================================
+# Additional datasets (added later): AFHQ-512, CelebA-256, MRI-384.
+# Each reuses verified original code; paths centralized here.
+# =============================================================================
+
+# --- AFHQ-512 (PixelFlow cat/dog/wild model, res 512) ------------------------
+# Pipeline = the SAME demo_runner posterior sampler, afhq model + demo_afhq images.
+afhq_model_dir:           /sfs/ceph/standard/CBIG-Standard-ECE/Zach/MSFlow/github_project_local/checkpoints/afhq
+afhq_model_ckpt:          model_epoch80_fid39.02.pt
+afhq_demo_dir:            /sfs/ceph/standard/CBIG-Standard-ECE/Zach/MSFlow/PixelFlow/IP_package/demo_afhq
+afhq_task_configs:        /sfs/ceph/standard/CBIG-Standard-ECE/Zach/MSFlow/PixelFlow/IP_package/tasks_afhq
+afhq_reference_runs:      /sfs/ceph/standard/CBIG-Standard-ECE/Zach/MSFlow/PixelFlow/IP_package/demo_runs_afhq
+afhq_resolution:          512
+
+# --- CelebA-256 (PixelFlow exp_155024, res 256, SR scale x2) -----------------
+# Self-contained harness reused: celeba_results/code/{evaluate,run_all,...}.py
+celeba_model_dir:         /sfs/ceph/standard/CBIG-Standard-ECE/Zach/MSFlow/github_project_local/checkpoints/celeba
+celeba_model_ckpt:        model_epoch0020.pt
+celeba_code_dir:          /sfs/ceph/standard/CBIG-Standard-ECE/Zach/MSFlow/PixelFlow/IP_package/celeba_results/code
+celeba_configs_src:       /sfs/ceph/standard/CBIG-Standard-ECE/Zach/MSFlow/PixelFlow/IP_package/celeba_results/configs
+celeba_groups_dir:        /sfs/ceph/standard/CBIG-Standard-ECE/Zach_dataset/Zach_dataset/results/celeba_results_data/groups
+celeba_reference_runs:    /sfs/ceph/standard/CBIG-Standard-ECE/Zach_dataset/Zach_dataset/results/celeba_results_data/runs
+celeba_reference_metrics: /sfs/ceph/standard/CBIG-Standard-ECE/Zach/MSFlow/PixelFlow/IP_package/celeba_results/metrics
+celeba_resolution:        256
+
+# --- MRI-384 (SENSE k-space; prior RESTORED — re-sampling enabled) -----------
+# Data is ALREADY normalized (|x|max=1, csm unit-power). Scale applies to y only.
+# See docs/mri_normalization_notes.md.
+mri_dir:                  /sfs/ceph/standard/CBIG-Standard-ECE/Zach/MSFlow/PixelFlow/debug_IP4/MRI
+mri_operator_code:        /sfs/ceph/standard/CBIG-Standard-ECE/Zach/MSFlow/PixelFlow/debug_IP4/MRI/val2
+mri_runner:               /sfs/ceph/standard/CBIG-Standard-ECE/Zach/MSFlow/PixelFlow/debug_IP4/MRI/val_final_8/run.py
+mri_test_data:            /sfs/ceph/standard/CBIG-Standard-ECE/Zach/MSFlow/PixelFlow/debug_IP4/MRI/test_data_n_mask/subset_test_data384
+mri_mask_acc8:            /sfs/ceph/standard/CBIG-Standard-ECE/Zach/MSFlow/PixelFlow/debug_IP4/MRI/test_data_n_mask/acc8_c_384.npy
+mri_mask_acc4:            /sfs/ceph/standard/CBIG-Standard-ECE/Zach/MSFlow/PixelFlow/debug_IP4/MRI/test_data_n_mask/acc4_c_384.npy
+mri_reference_runs:       /sfs/ceph/standard/CBIG-Standard-ECE/Zach/MSFlow/PixelFlow/debug_IP4/MRI/val_final_8
+# RESTORED (2026-07): symlink dir with config.yaml + model_epoch40.pt, resolving to
+# Zach_dataset/results/MSFlow/PixelFlow_train_code/exp0003 (= the old
+# find_best_MRI_prior/top5/top1_exp0003_val_epoch40; verified via
+# pretrained_models/MRI/metrics.json: exp0003 / val_epoch40, rank_avg 1.5).
+mri_prior_ckpt:           /sfs/ceph/standard/CBIG-Standard-ECE/Zach/MSFlow/github_project_local/checkpoints/mri
+mri_resolution:           384
+mri_best_config:          ns0_l200_he1e-02_hx0.3_srs1e-03
+
+# --- runtime -----------------------------------------------------------------
+python_bin:               ~/anaconda3/envs/pixelflow/bin/python   # ~ expands (local_paths.py / _common.sh)
+conda_env:                pixelflow
+default_gpu:              0          # CBIG cluster: GPU index inside your allocation (Slurm)
+batch_size:               8          # MUST stay 8 — sets the per-image seed stream
+seed:                     42         # all-seeds-42 policy (rerun_imageNet/seeding.py)

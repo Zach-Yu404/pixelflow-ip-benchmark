@@ -1,0 +1,18 @@
+# MRI-384 SENSE reconstruction, acc4 variant — EXPLORATORY (no reference run).
+# Same prior + winning sampler config as sense_acc8.yaml, but the milder acc4
+# mask (acc4_c_384.npy). NOTE: the 576-config sweep selected the winner at acc8;
+# it was NOT re-tuned for acc4, and results/previous_results/mri has no acc4
+# reference — treat outputs as exploratory, not reproduction targets.
+# ---------------------------------------------------------------------------
+task: mri_sense_reconstruction
+validation_tag: ns0_l200_he1e-02_hx0.3_srs1e-03   # -> val2/configs/<tag>.json
+operator:
+  name: mri_operator.MRIReconstructionOperator
+  acceleration: acc4
+  mask: mri_mask_acc4                              # key into paths.local.yaml (acc4_c_384.npy)
+  n_coils: 16
+resolution: 384
+sigma_n: 0.01
+nsamples: 16
+group: 0
+slices: [0, 1, 2]

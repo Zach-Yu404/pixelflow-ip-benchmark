@@ -1,0 +1,31 @@
+# --- large / regenerable artifacts (do NOT commit) ---------------------------
+# Checkpoints are symlinks to the original 2.7 GB model.pt — never commit the blob.
+checkpoints/ours/model.pt
+*.pt
+*.ckpt
+
+# Reproduced outputs (regenerate with scripts/); keep previous_results symlinks.
+results/reproduced_results/
+# Benchmark metric numbers stay OUT of the repo (kept locally / in the paper draft).
+results/metrics/
+docs/local_reproduction_report.md
+results/figures/smoke/
+results/figures/existing_eval/
+
+# logs
+docs/reproduction_commands.log
+*.log
+
+# python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+
+# --- intentionally KEPT (symlinks, small) ------------------------------------
+# checkpoints/ours/config.yaml   (small, describes the model)
+# results/previous_results/*     (symlinks to reference results)
+# results/baselines/*            (symlinks to baseline results)
+# configs/**                     (the reproducible configs)

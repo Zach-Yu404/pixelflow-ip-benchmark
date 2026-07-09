@@ -1,0 +1,22 @@
+name: mri384_pixelflow_prior
+description: >
+  PixelFlow MRI prior (brain AXT2, res 384, 2-channel real/imag) used with a SENSE
+  k-space operator for accelerated MRI reconstruction. The prior checkpoint was
+  RESTORED after the cluster migration, so re-sampling is enabled again.
+status: AVAILABLE
+checkpoint: checkpoints/mri                # config.yaml + model_epoch40.pt; see checkpoints/mri/CHECKPOINT_RESTORED.txt
+# = the old find_best_MRI_prior/top5/top1_exp0003_val_epoch40 (exp0003 @ epoch 40),
+# now served from Zach_dataset/results/MSFlow/PixelFlow_train_code/exp0003.
+resolution: 384
+operator: mri_operator.MRIReconstructionOperator   # SENSE forward/adjoint, cgIter 50
+acceleration: acc8 (acc8_c_384.npy)        # 53 kept k-space columns
+n_coils: 16
+sampler: ip4_mri.run_ip4                   # debug_IP4 multi-stage Langevin (IP4)
+best_config: ns0_l200_he1e-02_hx0.3_srs1e-03
+task_configs: configs/mri                  # sense_acc8.yaml (reference protocol) · sense_acc4.yaml (exploratory)
+sigma_n: 0.01
+# NORMALIZATION (verified — see docs/mri_normalization_notes.md):
+#   GT `x` is ALREADY peak-normalized (|x|max=1); csm is unit-power normalized.
+#   DO NOT re-normalize either. The per-slice `scale` (~1385) is applied to the
+#   MEASUREMENT y only, to match the GT-forward k-space magnitude.
+reference_results: results/previous_results/mri/val_final_8   # slice{0,1,2}: gt/mmse/std/samples

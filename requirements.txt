@@ -1,0 +1,25 @@
+# Pinned to the verified `pixelflow` conda env that produced all results.
+# Recreate that env (environment.yml) OR install these into Python 3.12.
+# torch is CUDA 12.4; install from the appropriate index for your machine.
+torch==2.6.0
+torchvision==0.21.0
+numpy==2.4.3
+pillow==12.1.1
+omegaconf==2.3.0
+PyYAML==6.0.3
+piq==0.8.0
+lpips==0.1.4
+scikit-image==0.26.0
+scipy==1.17.1
+matplotlib==3.10.8
+einops==0.8.2
+tqdm==4.67.3
+# Required by the reused original sampler/pixelflow code (PixelFlow/requirements.txt);
+# was missing from the first cut of this file — added during the 2026-07 migration.
+diffusers==0.32.2
+transformers==4.48.0
+torchdiffeq==0.2.4
+pandas
+pyarrow
+# Note: the `pixelflow` package itself is imported from the original IP_package
+# (configs/paths.local.yaml: original_ip_package); it is NOT pip-installable here.

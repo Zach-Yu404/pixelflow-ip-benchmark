@@ -1,0 +1,17 @@
+The MRI flow prior checkpoint was RESTORED on this machine (2026-07).
+
+This directory now holds the prior exactly as val_final_8/run.py expects
+(--ckpt DIR containing config.yaml + model_epoch40.pt):
+  config.yaml      -> Zach_dataset/results/MSFlow/PixelFlow_train_code/exp0003/config.yaml
+  model_epoch40.pt -> Zach_dataset/results/MSFlow/PixelFlow_train_code/exp0003/model_epoch40.pt
+                      (7,332,280,657 bytes)
+
+Provenance: this is the SAME checkpoint the old machine served as
+  find_best_MRI_prior/top5/top1_exp0003_val_epoch40
+(that dir was a val-sweep selection of exp0003 @ epoch 40; verified against
+MSFlow_IP/pretrained_models/MRI/metrics.json: exp="exp0003", val_dir="val_epoch40",
+ckpt_path=".../PixelFlow_train_code/exp0003/model_epoch40.pt", rank_avg=1.5).
+
+Re-sampling is therefore ENABLED again:
+  configs/paths.local.yaml: mri_prior_ckpt -> this directory
+  benchmark/run_mri.py picks it up automatically (or pass --ckpt explicitly).

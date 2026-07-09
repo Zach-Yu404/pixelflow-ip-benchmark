@@ -1,0 +1,11 @@
+name: afhq512_pixelflow
+description: >
+  PixelFlow cat/dog/wild prior (AFHQ), resolution 512, num_classes 3. Same posterior
+  sampler as ImageNet; per-image (batch_size 1) via the demo_runner pipeline.
+model_dir: checkpoints/afhq               # -> pretrained_models/afhq (config.yaml + ckpt)
+checkpoint: checkpoints/afhq/model_epoch80_fid39.02.pt   # ~7.3 GB
+config_yaml: checkpoints/afhq/config.yaml # depth 24, 16 heads, num_classes 3, 4 stages
+resolution: 512
+load: {weights_only: false, state_dict_key: auto, strict: true}
+classes: {0: cat, 1: dog, 2: wild}        # from demo_afhq/labels.json
+guidance: {type: classifier_free, default_scale: 2.0}

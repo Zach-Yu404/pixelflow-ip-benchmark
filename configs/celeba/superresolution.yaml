@@ -1,0 +1,35 @@
+# CelebA-256 superresolution / LPIPS_king  (PixelFlow exp_155024 prior, res 256)
+# AUTO-GENERATED from celeba_results/configs/superresolution__LPIPS_king.json (paths stripped).
+# Reproduces: results/previous_results/celeba/runs/superresolution/ (metrics in celeba/metrics/)
+# Model/data/groups paths come from configs/paths.local.yaml (celeba_*).
+# NOTE: SR scale_factor is x2 here (CelebA convention), not x4.
+# ---------------------------------------------------------------------------
+task: superresolution
+validation_tag: LPIPS_king
+operator:
+  scale_factor: 2
+kw:
+  num_langevin: 10
+  ode_steps_per_stage: 10
+  shift: 1.0
+  guidance_scale: 2.0
+  warm_restart: true
+  g_bypass_stage3: true
+  x1_init_mode: model
+  lambda_x: 0.01
+  rho_s: 1.0
+  rho_e: 1.0
+  cg_tol: 1.0e-05
+  cg_max_iter: 50
+  final_denoise: false
+  terminal_replace_weight: 0.0
+  noise_scale: 1.0
+  lambda_reg: 350.0
+  lambda_prox: 350.0
+  h_epsilon: 0.001
+  h_x: 0.2
+  sigma_ref_sq: 1.0e-05
+resolution: 256
+sigma_n: 0.05
+batch_size: 8
+group_id: 0

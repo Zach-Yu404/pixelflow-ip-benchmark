@@ -1,0 +1,55 @@
+# MRI-384 SENSE reconstruction, acc8 / ns0_l200_he1e-02_hx0.3_srs1e-03
+# (PixelFlow brain-AXT2 prior, res 384, 2-channel real/imag, 16 coils)
+# MIRRORS debug_IP4/MRI/val_final_8/run.py defaults — the run that produced
+# results/previous_results/mri/val_final_8/slice{0,1,2}. The winning tag comes
+# from the 576-config sweep (debug_IP4/MRI/sweep_configs.py; top10_winners.txt,
+# rank 1 by avg(LPIPS,PSNR) — see MSFlow_IP/pretrained_models/MRI/metrics.json).
+# Tag decode: ns=noise_scale, l=lambda_reg/prox, he=h_epsilon, hx=h_x, srs=sigma_ref_sq.
+# Model dir comes from configs/paths.local.yaml: mri_prior_ckpt (checkpoints/mri).
+# NORMALIZATION: GT x (|x|max=1) and csm (unit-power) are PRE-normalized — never
+# re-normalize; the per-slice scale is applied to the measurement y only.
+# ---------------------------------------------------------------------------
+task: mri_sense_reconstruction
+validation_tag: ns0_l200_he1e-02_hx0.3_srs1e-03   # -> val2/configs/<tag>.json (kw below is its copy)
+operator:
+  name: mri_operator.MRIReconstructionOperator     # SENSE forward/adjoint
+  acceleration: acc8
+  mask: mri_mask_acc8                              # key into paths.local.yaml (acc8_c_384.npy, 53 kept cols)
+  n_coils: 16
+kw:                                                # informative copy of val2/configs/<tag>.json "kw"
+  num_langevin: 10
+  ode_steps_per_stage: 10
+  shift: 1.0
+  guidance_scale: 2.0
+  class_label: 0
+  warm_restart: true
+  g_bypass_stage3: true
+  x1_init_mode: model
+  lambda_x: 0.01
+  rho_s: 1.0
+  rho_e: 1.0
+  cg_tol: 1.0e-05
+  cg_max_iter: 50
+  final_denoise: true
+  terminal_replace_weight: 0.0
+  soft_replace_weight: 0.0
+  h_x_obs_ratio: 1.0
+  skip_eps_update: false
+  dps_kick_zeta: null
+  reset_eps_per_ode_step: false
+  lambda_eps_norm: 0.0
+  mask_aware_eps: false
+  lambda_eps_prox: 0.0
+  lambda_eps_inject: 0.0
+  noise_scale: 0
+  lambda_reg: 200.0
+  lambda_prox: 200.0
+  h_epsilon: 0.01
+  h_x: 0.3
+  sigma_ref_sq: 0.001
+resolution: 384
+sigma_n: 0.01                                      # data-fidelity weight (run.py SIGMA_N)
+nsamples: 16                                       # per-slice posterior samples (MMSE/STD over these)
+group: 0
+slices: [0, 1, 2]                                  # reference covers these; pass --slice_idx per run
+reference_results: results/previous_results/mri/val_final_8

@@ -1,0 +1,36 @@
+# AFHQ-512 box_inpainting / LPIPS_king_srs1e-4__fd1_tr1  (PixelFlow cat/dog/wild prior, res 512)
+# AUTO-GENERATED from tasks_afhq/box_inpainting/configs/LPIPS_king_srs1e-4__fd1_tr1.json (paths stripped).
+# Reproduces: results/previous_results/afhq/demo_runs_afhq/box_inpainting/LPIPS_king_srs1e-4__fd1_tr1/
+# Model/data paths come from configs/paths.local.yaml (afhq_*).
+# ---------------------------------------------------------------------------
+task: box_inpainting
+validation_tag: LPIPS_king_srs1e-4__fd1_tr1
+operator:
+  mask_len_range:
+  - 256
+  - 257
+kw:
+  num_langevin: 10
+  h_x: 0.1
+  h_epsilon: 0.001
+  lambda_reg: 150.0
+  noise_scale: 1.0
+  ode_steps_per_stage: 10
+  shift: 1.0
+  guidance_scale: 2.0
+  warm_restart: true
+  g_bypass_stage3: true
+  x1_init_mode: model
+  lambda_x: 0.01
+  rho_s: 1.0
+  rho_e: 1.0
+  cg_tol: 1.0e-05
+  cg_max_iter: 50
+  terminal_replace_weight: 1.0
+  lambda_prox: 150.0
+  sigma_ref_sq: 0.0001
+  final_denoise: true
+resolution: 512
+sigma_n: 0.05
+batch_size: 1
+group_id: 0

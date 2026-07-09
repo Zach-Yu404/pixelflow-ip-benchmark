@@ -1,0 +1,36 @@
+# CelebA-256 box_inpainting / LPIPS_king  (PixelFlow exp_155024 prior, res 256)
+# AUTO-GENERATED from celeba_results/configs/box_inpainting__LPIPS_king.json (paths stripped).
+# Reproduces: results/previous_results/celeba/runs/box_inpainting/ (metrics in celeba/metrics/)
+# Model/data/groups paths come from configs/paths.local.yaml (celeba_*).
+# ---------------------------------------------------------------------------
+task: box_inpainting
+validation_tag: LPIPS_king
+operator:
+  mask_len_range:
+  - 40
+  - 41
+kw:
+  num_langevin: 10
+  h_x: 0.1
+  h_epsilon: 0.001
+  lambda_reg: 150.0
+  noise_scale: 1.0
+  ode_steps_per_stage: 10
+  shift: 1.0
+  guidance_scale: 2.0
+  warm_restart: true
+  g_bypass_stage3: true
+  x1_init_mode: model
+  lambda_x: 0.01
+  rho_s: 1.0
+  rho_e: 1.0
+  cg_tol: 1.0e-05
+  cg_max_iter: 50
+  terminal_replace_weight: 1.0
+  lambda_prox: 150.0
+  sigma_ref_sq: 0.0001
+  final_denoise: true
+resolution: 256
+sigma_n: 0.05
+batch_size: 8
+group_id: 0

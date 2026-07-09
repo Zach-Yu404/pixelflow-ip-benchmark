@@ -1,0 +1,40 @@
+# DOCUMENTATION-ONLY: evaluate.py hard-codes this metric stack in src/metrics and does NOT
+# parse this YAML (its --config flag is kept for CLI parity). To change rulers, edit src/metrics.
+# Metric stack for evaluate.py. ONE ruler for everything so numbers are comparable
+# across ours and all baselines (the audit's #1 fix was "3 metric pipelines / 3 LPIPS
+# rulers / 2 GTs" -> collapse to one). All computed in [0,1], data_range=1.0.
+
+data_range: 1.0          # images compared in [0,1]
+resolution: 256
+
+metrics:
+  # primary stack (the "LPIPS_king" ruler used in the headline 3-way table)
+  - name: psnr
+    impl: piq.psnr
+    data_range: 1.0
+  - name: ssim
+    impl: piq.ssim
+    data_range: 1.0
+  - name: lpips                 # piq VGG with replace_pooling=True  == "LPIPS_king"
+    impl: piq.LPIPS
+    replace_pooling: true
+    note: headline LPIPS ruler; same for ours and DAPS in the 3-way table
+
+  # secondary / cross-check rulers (official lpips package)
+  - name: lpips_alex
+    impl: lpips.LPIPS(net=alex)
+    input_range: "[-1,1]"
+    note: official AlexNet LPIPS; used in proper-crop baseline table
+  - name: lpips_vgg
+    impl: lpips.LPIPS(net=vgg)
+    input_range: "[-1,1]"
+
+# For inpainting we also report PSNR on the UNOBSERVED region only (psnr_unobs),
+# computed by runner.py when masks are present.
+inpainting_unobserved_psnr: true
+
+# FID is intentionally OFF by default (needs >=2k images for a stable estimate;
+# the reproduction set is 100). Enable explicitly for a full-set run.
+fid:
+  enabled: false
+  note: requires a large sample; not meaningful at N=100
